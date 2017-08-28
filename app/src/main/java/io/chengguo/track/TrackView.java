@@ -1,5 +1,6 @@
 package io.chengguo.track;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -22,7 +23,8 @@ import android.widget.HorizontalScrollView;
  * @date 2017年08月25日 10:10
  */
 public class TrackView extends FrameLayout {
-    protected static int offsetStart;
+    protected static int offsetLeft;
+    protected static int offsetBigGraduation;
     private static final String TAG = TrackView.class.getSimpleName();
 
     public TrackView(Context context) {
@@ -44,6 +46,7 @@ public class TrackView extends FrameLayout {
         FrameLayout.LayoutParams params = generateDefaultLayoutParams();
         params.width = 2;
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        params.topMargin = 100;
         params.gravity = Gravity.CENTER_HORIZONTAL;
         addView(innerScrollView, ViewGroup.LayoutParams.MATCH_PARENT, dipToPixels(context, 200));
         addView(centerLineView, params);
@@ -132,51 +135,77 @@ public class TrackView extends FrameLayout {
             drawGraduated(canvas);
         }
 
-        private void drawGraduated(Canvas canvas) {
-            mPaint.setColor(Color.parseColor("#F2F2F2"));//#F5F5F5 #F2F2F2
-            mPaint.setStyle(Paint.Style.FILL);
-            int measuredWidth = getMeasuredWidth();
-            if (offsetStart == 0) {
-                offsetStart = (measuredWidth >> 1) % (UNIT << 2);//计算左边开始的大刻度偏移值
-            }
-            int count = measuredWidth / UNIT;//完整屏幕能显示的刻度个数
-            float[] pts = new float[count << 2];
-            for (int i = 0, x, y; i < count; i++) {
-                x = i * UNIT + offsetStart;
-                y = i % 4 == 0 ? 40 : 20;
-                pts[i * 4] = x;
-                pts[i * 4 + 1] = offsetTop;
-                pts[i * 4 + 2] = x;
-                pts[i * 4 + 3] = y + offsetTop;
-            }
-            canvas.drawLines(pts, mPaint);
-        }
-
         private void drawBackground(Canvas canvas) {
-            mPaint.setColor(Color.parseColor("#F7F7F7"));
+            mPaint.setColor(Color.parseColor("#F9F9F9"));
             canvas.drawRect(0, offsetTop, getRight(), getBottom(), mPaint);
         }
 
-        private void drawTime(Canvas canvas) {
-            mPaint.setTextSize(dipToPixels(getContext(), 14));
-            mPaint.setStrokeWidth(2);
+        private void drawGraduated(Canvas canvas) {
+            int measuredWidth = getMeasuredWidth();
+            if (offsetLeft == 0) {
+                offsetLeft = (measuredWidth >> 1) % (UNIT << 2);//计算左边开始的大刻度偏移值
+                offsetBigGraduation = ((measuredWidth >> 1) - offsetLeft) / (UNIT << 2);
+            }
+            int count = (measuredWidth) / UNIT;//能显示的刻度总个数
+            Log.d(TAG, "count: " + count);
 
+            int bigCount = ((count >> 2) + 1);
+            float[] bigPoints = new float[bigCount << 2];
+            Log.d(TAG, "bigCount: " + bigCount);
+
+            int smallCount = count - bigCount + 1;
+            Log.d(TAG, "smallCount: " + smallCount);
+            float[] smallPoints = new float[smallCount << 2];
+            for (int i = 0, x, y; i < count; i++) {
+                x = i * UNIT + offsetLeft;
+                if (i % 4 == 0) {
+                    y = 40;
+                    int bi = i >> 2;
+                    Log.d(TAG, i + " >> 2: " + bi);
+                    bigPoints[bi * 4] = x;
+                    bigPoints[bi * 4 + 1] = offsetTop;
+                    bigPoints[bi * 4 + 2] = x;
+                    bigPoints[bi * 4 + 3] = y + offsetTop;
+                    if (bi >= offsetBigGraduation) {//跳过大的偏移刻度
+                        drawTime(canvas, bi - offsetBigGraduation, x, offsetTop - 15);//draw time text
+                    }
+                } else {
+                    y = 20;
+                    int si = i - (i >> 2) - 1;
+                    smallPoints[si * 4] = x;
+                    smallPoints[si * 4 + 1] = offsetTop;
+                    smallPoints[si * 4 + 2] = x;
+                    smallPoints[si * 4 + 3] = y + offsetTop;
+                }
+            }
+            mPaint.setColor(Color.parseColor("#E4E4E4"));
+            mPaint.setStyle(Paint.Style.FILL);
+            canvas.drawLines(smallPoints, mPaint);//小刻度
+            mPaint.setColor(Color.parseColor("#D2D2D2"));
+            canvas.drawLines(bigPoints, mPaint);//大刻度
+        }
+
+        @SuppressLint("DefaultLocale")
+        private void drawTime(Canvas canvas, int index, int x, int y) {
+            mPaint.setTextSize(dipToPixels(getContext(), 12));
+            mPaint.setStrokeWidth(3);
             mPaint.setColor(Color.RED);
-            canvas.drawPoint(100, 50, mPaint);
-            String text = "00:00";
+            canvas.drawPoint(x, y, mPaint);
+
+            String text = String.format("%02d:%02d", (index << 1) / 60, (index << 1) % 60);
             Rect rect = new Rect();
-            mPaint.getTextBounds(text, 0, 5, rect);
+            mPaint.getTextBounds(text, 0, text.length(), rect);
             Log.d(TAG, "rect: " + rect.toShortString());
-            mPaint.setColor(Color.parseColor("#88888888"));
-            int center = 100 - rect.centerX();
+            mPaint.setColor(Color.parseColor("#808080"));
+            int center = x - rect.centerX();
             Log.d(TAG, "center: " + center);
-            canvas.drawText(text, center, 50, mPaint);
+            canvas.drawText(text, center, y, mPaint);
         }
 
         @Override
         public void onClick(View v) {
             Log.d(TAG, "onClick() called with: v = [" + v + "]");
-            getLayoutParams().width = getMeasuredWidth() + 50;
+            getLayoutParams().width = getMeasuredWidth() + 100;
             requestLayout();
         }
     }
@@ -202,7 +231,7 @@ public class TrackView extends FrameLayout {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            canvas.drawColor(Color.RED);
+            canvas.drawColor(Color.parseColor("#F79898"));
         }
     }
 
