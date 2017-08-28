@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:layout_marginTop="20dp"
-    android:background="#eee"
+    android:background="@android:color/white"
     android:scrollbars="horizontal"
     tools:context="io.chengguo.track.MainActivity">
 </io.chengguo.track.TrackView>
