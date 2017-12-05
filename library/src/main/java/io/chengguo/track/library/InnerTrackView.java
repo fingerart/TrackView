@@ -34,7 +34,6 @@ class InnerTrackView extends View {
     public InnerTrackView(Context context, TrackViewAttrs trackAttrs) {
         super(context);
         this.trackAttrs = trackAttrs;
-        addDecibel(0);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     }
 
@@ -49,7 +48,6 @@ class InnerTrackView extends View {
 
     public void clear() {
         decibels.clear();
-        decibels.add(0);
         getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
         requestLayout();
     }
