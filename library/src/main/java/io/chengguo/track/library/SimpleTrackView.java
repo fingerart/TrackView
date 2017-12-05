@@ -47,7 +47,6 @@ public class SimpleTrackView extends TrackView {
     public void clear() {
         stop();
         track.clear();
-        track.notifyDecibelChange();
     }
 
     @Override
