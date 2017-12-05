@@ -2,34 +2,20 @@ package io.chengguo.track;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import io.chengguo.track.library.SimpleTrackView;
+import io.chengguo.track.library.SlideGraduationListener;
+import io.chengguo.track.library.TrackAdapter;
 
-import io.chengguo.track.library.TrackView;
-
-public class MainActivity extends AppCompatActivity implements TrackView.SlideGraduationListener {
+public class MainActivity extends AppCompatActivity implements SlideGraduationListener, TrackAdapter {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    protected TrackView track;
+    protected SimpleTrackView track;
     protected TextView time;
-    @SuppressLint("HandlerLeak")
-    private static Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.obj != null && msg.obj instanceof TrackView) {
-                ((TrackView) msg.obj).go(((int) (Math.random() * 100)));
-            }
-        }
-    };
-
-    Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements TrackView.SlideGr
         track = findViewById(R.id.track);
         time = findViewById(R.id.time);
         track.setOnSlideGraduationListener(this);
+        track.setTrackAdapter(this);
     }
 
     @SuppressLint("DefaultLocale")
@@ -49,21 +36,16 @@ public class MainActivity extends AppCompatActivity implements TrackView.SlideGr
         time.setText(String.format("%02d:%02d.%02d", min, sec, currentGraduation % 100));
     }
 
-    public void dw(View view) {
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                Log.d(TAG, "TimerTask#run() called");
-                handler.obtainMessage(0, track).sendToTarget();
-            }
-        }, 0, 50);
-        track.lock(true);
+    public void onStart(View view) {
+        track.start();
     }
 
-    public void td(View view) {
-        track.lock(false);
-        timer.cancel();
-        timer.purge();
+    public void onStop(View view) {
+        track.stop();
+    }
+
+    @Override
+    public int getAmplitude() {
+        return ((int) (Math.random() * 100));
     }
 }

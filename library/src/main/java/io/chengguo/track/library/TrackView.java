@@ -16,8 +16,8 @@ import android.widget.FrameLayout;
  */
 public class TrackView extends FrameLayout {
     private static final String TAG = TrackView.class.getSimpleName();
-    private InnerScrollView innerScrollView;
-    private InnerTrackView track;
+    protected InnerScrollView innerScrollView;
+    protected InnerTrackView track;
     protected boolean lock;
     private int indexColor;
     private int trackColor;
@@ -65,6 +65,11 @@ public class TrackView extends FrameLayout {
         track = innerScrollView.findViewById(R.id.track_view);
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return lock || super.onInterceptTouchEvent(ev);
+    }
+
     public void go(int decibel) {
         track.addDecibel(decibel);
         go();
@@ -80,23 +85,22 @@ public class TrackView extends FrameLayout {
         });
     }
 
-    public void setOnSlideGraduationListener(SlideGraduationListener onSlideGraduationListener) {
-        innerScrollView.setOnSlideGraduationListener(onSlideGraduationListener);
-    }
-
+    /**
+     * 禁止触摸
+     *
+     * @param lock
+     */
     public void lock(boolean lock) {
         this.lock = lock;
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return lock || super.onInterceptTouchEvent(ev);
+    /**
+     * 设置刻度滑动监听器
+     *
+     * @param onSlideGraduationListener
+     */
+    public void setOnSlideGraduationListener(SlideGraduationListener onSlideGraduationListener) {
+        innerScrollView.setOnSlideGraduationListener(onSlideGraduationListener);
     }
 
-    /**
-     * 音轨滑动监听器
-     */
-    public interface SlideGraduationListener {
-        void onGraduationChanged(int currentGraduation);
-    }
 }

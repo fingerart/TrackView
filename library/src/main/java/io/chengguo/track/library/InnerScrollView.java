@@ -16,7 +16,7 @@ import static io.chengguo.track.library.Util.getField;
 class InnerScrollView extends HorizontalScrollView {
     private static final String TAG = TrackView.class.getSimpleName();
     InnerTrackView innerTrackView;
-    protected TrackView.SlideGraduationListener graduationListener;
+    protected SlideGraduationListener graduationListener;
     private OverScroller mScroller;
     private boolean mInTouch;
     private GestureDetector flingGestureDetector;
@@ -79,7 +79,7 @@ class InnerScrollView extends HorizontalScrollView {
         }
     }
 
-    public void setOnSlideGraduationListener(TrackView.SlideGraduationListener listener) {
+    public void setOnSlideGraduationListener(SlideGraduationListener listener) {
         graduationListener = listener;
     }
 

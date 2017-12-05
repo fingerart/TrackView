@@ -17,7 +17,7 @@
         android:text="00:00.00"
         android:textSize="20dp" />
 
-    <io.chengguo.track.library.TrackView
+    <io.chengguo.track.library.SimpleTrackView
         android:id="@+id/track"
         android:layout_width="match_parent"
         android:layout_height="150dp" />
@@ -31,13 +31,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="dw"
+            android:onClick="onStart"
             android:text="start" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="td"
+            android:onClick="onStop"
             android:text="pause" />
     </LinearLayout>
 </LinearLayout>
