@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,8 @@ class InnerTrackView extends View {
     public void clear() {
         decibels.clear();
         decibels.add(0);
+        getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+        requestLayout();
     }
 
     public void notifyDecibelChange() {
