@@ -44,6 +44,12 @@ public class SimpleTrackView extends TrackView {
         }
     }
 
+    public void clear() {
+        stop();
+        track.clear();
+        track.notifyDecibelChange();
+    }
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -61,8 +67,7 @@ public class SimpleTrackView extends TrackView {
                         if (trackAdapter != null) {
                             decibel = trackAdapter.getAmplitude();
                         }
-                        track.addDecibel(decibel);
-                        go();
+                        go(decibel);
                     }
                 });
             }
