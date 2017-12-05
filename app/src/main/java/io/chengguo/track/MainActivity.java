@@ -9,6 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import io.chengguo.track.library.TrackView;
 
 public class MainActivity extends AppCompatActivity implements TrackView.SlideGraduationListener {
@@ -17,34 +20,29 @@ public class MainActivity extends AppCompatActivity implements TrackView.SlideGr
     protected TrackView track;
     protected TextView time;
     @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
-        private int t;
-
+    private static Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            removeMessages(0);
-            if (t % 5 == 0) {
-                track.go(((int) (Math.random() * 100)));
-            } else {
-                track.go();
+            if (msg.obj != null && msg.obj instanceof TrackView) {
+                ((TrackView) msg.obj).go(((int) (Math.random() * 100)));
             }
-            t++;
-            sendEmptyMessageDelayed(0, 10);
         }
     };
+
+    Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        track = (TrackView) findViewById(R.id.track);
-        time = (TextView) findViewById(R.id.time);
+        track = findViewById(R.id.track);
+        time = findViewById(R.id.time);
         track.setOnSlideGraduationListener(this);
     }
 
     @SuppressLint("DefaultLocale")
     @Override
-    public void onGraduationChanged(int currentGraduation) {//毫秒
+    public void onGraduationChanged(int currentGraduation) {
         Log.d(TAG, "onGraduationChanged() called with: currentGraduation = [" + currentGraduation + "]");
         int min = currentGraduation / 6000;
         int sec = (currentGraduation - min * 6000) / 100;
@@ -52,12 +50,20 @@ public class MainActivity extends AppCompatActivity implements TrackView.SlideGr
     }
 
     public void dw(View view) {
-        handler.sendEmptyMessage(0);
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Log.d(TAG, "TimerTask#run() called");
+                handler.obtainMessage(0, track).sendToTarget();
+            }
+        }, 0, 50);
         track.lock(true);
     }
 
     public void td(View view) {
         track.lock(false);
-        handler.removeMessages(0);
+        timer.cancel();
+        timer.purge();
     }
 }
