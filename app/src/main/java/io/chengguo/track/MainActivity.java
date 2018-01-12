@@ -7,14 +7,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import io.chengguo.track.library.SimpleTrackView;
 import io.chengguo.track.library.SlideGraduationListener;
 import io.chengguo.track.library.TrackAdapter;
 
 public class MainActivity extends AppCompatActivity implements SlideGraduationListener, TrackAdapter {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    protected SimpleTrackView track;
+    protected TrackView track;
     protected TextView time;
 
     @Override
@@ -23,8 +22,6 @@ public class MainActivity extends AppCompatActivity implements SlideGraduationLi
         setContentView(R.layout.activity_main);
         track = findViewById(R.id.track);
         time = findViewById(R.id.time);
-        track.setOnSlideGraduationListener(this);
-        track.setTrackAdapter(this);
     }
 
     @SuppressLint("DefaultLocale")
@@ -41,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements SlideGraduationLi
     }
 
     public void onStop(View view) {
-        track.stop();
     }
 
     @Override
