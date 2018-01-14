@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="TrackView_default_graduation_text">12dp</dimen>
+    <dimen name="TrackView_default_offset_top">50px</dimen>
 </resources>

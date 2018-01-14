@@ -33,10 +33,6 @@ public class MainActivity extends AppCompatActivity implements SlideGraduationLi
         time.setText(String.format("%02d:%02d.%02d", min, sec, currentGraduation % 100));
     }
 
-    public void onStart(View view) {
-        track.start();
-    }
-
     public void onStop(View view) {
     }
 

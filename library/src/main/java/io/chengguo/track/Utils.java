@@ -1,6 +1,5 @@
 package io.chengguo.track;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 
@@ -9,16 +8,12 @@ import android.view.ViewGroup;
  */
 class Utils {
     /**
-     * 创建
+     * 创建LayoutParams
      *
      * @return
      */
     @NonNull
     static <T extends ViewGroup> T.LayoutParams createMPLayoutParams() {
         return new T.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, T.LayoutParams.MATCH_PARENT);
-    }
-
-    static int getDisplayWidth(@NonNull Context context) {
-        return context.getResources().getDisplayMetrics().widthPixels;
     }
 }
