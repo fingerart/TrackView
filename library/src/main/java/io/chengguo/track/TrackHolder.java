@@ -18,7 +18,7 @@ class TrackHolder extends RecyclerView.ViewHolder {
      *
      * @return
      */
-    public Track getTrack() {
+    public Track getTrackView() {
         if (itemView != null) {
             View track = itemView.findViewById(R.id.track_view);
             if (track != null && track instanceof Track) {

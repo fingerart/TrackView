@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="TrackView_default_graduation_space">42px</dimen>
     <dimen name="TrackView_default_graduation_text">12dp</dimen>
-    <dimen name="TrackView_default_offset_top">50px</dimen>
+    <dimen name="TrackView_default_offset_top">50px</dimen>//Track的top偏移量
+    <dimen name="TrackView_default_cursor">3px</dimen>//光标的宽度
 </resources>

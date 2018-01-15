@@ -19,10 +19,10 @@ class Track extends View {
     //默认索引
     private static final int DEFAULT_POSITION = -1;
     //每小格的距离
-    private static final int UNIT_SCALE = 50;
+    private int mGraduationSpace;
     //每4小格是一大格
-    private static final int UNIT_SCALE_INTERVAL = 4;
-    private static final int UNIT_TRACK = 5;
+    private static final int UNIT_GRADUATION_INTERVAL = 4;
+    private static final int UNIT_TRACK = 6;
     private Paint mPaint;
     private int mBackground;
     //小刻度颜色
@@ -49,28 +49,13 @@ class Track extends View {
 
     private void initAttrs() {
         setId(R.id.track_view);
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaint = new Paint();
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStyle(Paint.Style.FILL);
         mBackground = getResources().getColor(R.color.TrackView_default_bg);
+        mGraduationSpace = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_graduation_space);
         mGraduationSColor = getResources().getColor(R.color.TrackView_default_graduation_s);
         mGraduationLColor = getResources().getColor(R.color.TrackView_default_graduation_l);
-    }
-
-    /**
-     * 重写绘制
-     *
-     * @param position
-     */
-    public void reDraw(int position) {
-        if (position <= DEFAULT_POSITION) {
-            Log.e(TAG, "parameter position must greater than " + DEFAULT_POSITION);
-            return;
-        }
-        if (mCurrentPosition != position) {
-            mCurrentPosition = position;
-            postInvalidate();
-        }
     }
 
     @Override
@@ -83,7 +68,7 @@ class Track extends View {
     protected void onDraw(Canvas canvas) {
         if (canDraw()) {
             drawBackground(canvas);
-            drawGraduated(canvas);
+            drawGraduation(canvas);
         }
     }
 
@@ -112,22 +97,22 @@ class Track extends View {
      *
      * @param canvas
      */
-    private void drawGraduated(Canvas canvas) {
+    private void drawGraduation(Canvas canvas) {
         int offsetLeft = getOffsetLeft();
         //计算当前Track的总刻度数
-        int count = (mWidth - offsetLeft) / UNIT_SCALE + 1;
+        int count = (mWidth - offsetLeft) / mGraduationSpace + 1;
         Log.d(TAG, "count: " + count);
 
         for (int i = 0, x, y; i < count; i++) {
-            x = offsetLeft + i * UNIT_SCALE;
-            if (isLargeScale(i, offsetLeft)) {
+            x = offsetLeft + i * mGraduationSpace;
+            if (isLargeGraduation(i, offsetLeft)) {
                 //大刻度
                 mPaint.setColor(mGraduationLColor);
-                y = offsetTop + 60;
+                y = offsetTop + 40;
             } else {
                 //小刻度
                 mPaint.setColor(mGraduationSColor);
-                y = offsetTop + 40;
+                y = offsetTop + 30;
             }
             canvas.drawLine(x, offsetTop, x, y, mPaint);
         }
@@ -140,14 +125,14 @@ class Track extends View {
      * @param offsetLeft
      * @return
      */
-    private boolean isLargeScale(int i, int offsetLeft) {
+    private boolean isLargeGraduation(int i, int offsetLeft) {
         //第一个Track的索引为-1；第二个Track的索引从0依次递增
         int index = mCurrentPosition - 1;
         //到当前的刻度数量
-        int scaleCount = mWidth * index / UNIT_SCALE + i;
+        int graduationCount = mWidth * index / mGraduationSpace + i;
         //处理拼接刻度导致的索引偏移
-        scaleCount += (offsetLeft > 0 ? index < 0 ? 0 : 1 : 0);
-        return scaleCount % UNIT_SCALE_INTERVAL == 0;
+        graduationCount += (offsetLeft > 0 ? index < 0 ? 0 : 1 : 0);
+        return graduationCount % UNIT_GRADUATION_INTERVAL == 0;
     }
 
     /**
@@ -158,14 +143,25 @@ class Track extends View {
     private int getOffsetLeft() {
         //第一个，offset值为取余
         if (mCurrentPosition == 0) {
-            return mWidth % UNIT_SCALE;
+            return mWidth % mGraduationSpace;
         }
         //前一个Track剩余的偏移值
-        int prevOL = (mCurrentPosition - 1) * mWidth % UNIT_SCALE;
+        int prevOL = (mCurrentPosition - 1) * mWidth % mGraduationSpace;
         if (prevOL > 0) {
             //计算当前Track的偏移值
-            return UNIT_SCALE - prevOL;
+            return mGraduationSpace - prevOL;
         }
         return 0;
+    }
+
+    public void notifyPositionChanged(int position) {
+        if (position <= DEFAULT_POSITION) {
+            Log.e(TAG, "parameter position must greater than " + DEFAULT_POSITION);
+            return;
+        }
+        if (mCurrentPosition != position) {
+            mCurrentPosition = position;
+            postInvalidate();
+        }
     }
 }

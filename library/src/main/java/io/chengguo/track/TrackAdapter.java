@@ -36,8 +36,9 @@ class TrackAdapter extends RecyclerView.Adapter<TrackHolder> {
 
     @Override
     public void onBindViewHolder(TrackHolder holder, int position) {
-        if (holder.getTrack() != null) {
-            holder.getTrack().reDraw(position);
+        Track trackView = holder.getTrackView();
+        if (trackView != null) {
+            trackView.notifyPositionChanged(position);
         }
     }
 
