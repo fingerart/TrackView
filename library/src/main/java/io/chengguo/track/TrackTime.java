@@ -84,6 +84,7 @@ class TrackTime extends View implements ITrackNotify {
         }
     }
 
+
     public RecyclerView.OnScrollListener getRecyclerScrollListener() {
         return new RecyclerView.OnScrollListener() {
             @Override

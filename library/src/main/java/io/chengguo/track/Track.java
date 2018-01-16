@@ -49,7 +49,7 @@ class Track extends View {
 
     private void initAttrs() {
         setId(R.id.track_view);
-        mPaint = new Paint();
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStyle(Paint.Style.FILL);
         mBackground = getResources().getColor(R.color.TrackView_default_bg);

@@ -13,17 +13,7 @@ import static io.chengguo.track.Utils.createMPLayoutParams;
  * Created by FingerArt on 2018/1/12.
  */
 class TrackAdapter extends RecyclerView.Adapter<TrackHolder> {
-    private List<List<Integer>> datas;
-
-    TrackAdapter() {
-        datas = new ArrayList<>();
-        datas.add(null);
-        datas.add(null);
-        datas.add(null);
-        datas.add(null);
-        datas.add(null);
-        datas.add(null);
-    }
+    private List<Integer> datas = new ArrayList<>();
 
     @Override
     public TrackHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -44,6 +34,11 @@ class TrackAdapter extends RecyclerView.Adapter<TrackHolder> {
 
     @Override
     public int getItemCount() {
-        return datas == null ? 0 : datas.size();
+        return 2 + (datas == null || datas.isEmpty() ? 0 : datas.size());
+    }
+
+    public void addGrade(int grade) {
+        datas.add(grade);
+        notifyDataSetChanged();
     }
 }

@@ -30,4 +30,10 @@ class TrackRecyclerView extends RecyclerView {
         mAdapter = new TrackAdapter();
         setAdapter(mAdapter);
     }
+
+    public void howl(int grade) {
+        if (getAdapter() != null && getAdapter() instanceof TrackAdapter) {
+            ((TrackAdapter) getAdapter()).addGrade(grade);
+        }
+    }
 }
