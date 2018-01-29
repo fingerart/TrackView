@@ -22,6 +22,7 @@ public class TrackView extends ViewGroup {
     private static final String TAG = "TrackView";
 
     private float offsetTop;
+    private TrackRecyclerView trackRecycler;
 
     public TrackView(@NonNull Context context) {
         this(context, null);
@@ -46,8 +47,8 @@ public class TrackView extends ViewGroup {
         setWillNotDraw(false);
         //组合事件
         TrackTime trackTime = new TrackTime(context);
-        TrackRecyclerView trackRecycler = new TrackRecyclerView(context);
-        trackRecycler.addOnScrollListener(trackTime.getRecyclerScrollListener());
+        trackRecycler = new TrackRecyclerView(context);
+        trackRecycler.addOnScrollListener(trackTime.createRecyclerScrollListener());
         //组合视图
         addView(trackRecycler, createMPLayoutParams());
         addView(trackTime, LayoutParams.MATCH_PARENT, (int) offsetTop);
@@ -56,6 +57,7 @@ public class TrackView extends ViewGroup {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
         int count = getChildCount();
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
@@ -68,9 +70,9 @@ public class TrackView extends ViewGroup {
                 childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.width);
             }
             if (lp.height == LayoutParams.MATCH_PARENT) {
-                childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY);
+                childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY);
             } else {
-                childHeightMeasureSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.height);
+                childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
             }
             child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
         }
@@ -88,9 +90,9 @@ public class TrackView extends ViewGroup {
     }
 
     @Override
-    protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);
-        Log.d(TAG, "dispatchDraw() called with: canvas = [" + canvas + "]");
+    public void onDrawForeground(Canvas canvas) {
+        super.onDrawForeground(canvas);
+        Log.d(TAG, "onDrawForeground: ");
         //绘制中间光标
         int cursorColor = getResources().getColor(R.color.TrackView_default_index);
         int cursorWidth = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_cursor);
@@ -98,5 +100,9 @@ public class TrackView extends ViewGroup {
         cursorPaint.setColor(cursorColor);
         cursorPaint.setStrokeWidth(cursorWidth);
         canvas.drawLine(getMeasuredWidth() / 2, offsetTop, getMeasuredWidth() / 2, getMeasuredHeight(), cursorPaint);
+    }
+
+    public void addTrack(int grade) {
+        trackRecycler.howl(grade);
     }
 }

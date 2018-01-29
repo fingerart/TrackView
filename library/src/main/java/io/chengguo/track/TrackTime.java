@@ -61,6 +61,7 @@ class TrackTime extends View implements ITrackNotify {
     @Override
     @SuppressLint({"DefaultLocale", "DrawAllocation"})
     protected void onDraw(Canvas canvas) {
+        Log.d(TAG, "onDraw: ");
         //之前的时间索引
         int preIndex = 0;
         //第一个点的绘制偏移量
@@ -84,8 +85,11 @@ class TrackTime extends View implements ITrackNotify {
         }
     }
 
-
-    public RecyclerView.OnScrollListener getRecyclerScrollListener() {
+    /**
+     * 获取监听RecyclerView.OnScrollListener的监听器，以更新时间
+     * @return
+     */
+    public RecyclerView.OnScrollListener createRecyclerScrollListener() {
         return new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -98,6 +102,5 @@ class TrackTime extends View implements ITrackNotify {
 
     @Override
     public void onChanged(int position) {
-
     }
 }

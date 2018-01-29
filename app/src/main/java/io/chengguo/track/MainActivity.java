@@ -7,6 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import io.chengguo.track.library.SlideGraduationListener;
 import io.chengguo.track.library.TrackAdapter;
 
@@ -15,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements SlideGraduationLi
     private static final String TAG = MainActivity.class.getSimpleName();
     protected TrackView track;
     protected TextView time;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +37,20 @@ public class MainActivity extends AppCompatActivity implements SlideGraduationLi
         time.setText(String.format("%02d:%02d.%02d", min, sec, currentGraduation % 100));
     }
 
+    public void onStart(View view) {
+        track.addTrack((int) (Math.random() * 100));
+//        timer = new Timer();
+//        timer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//            }
+//        }, 0, 20);
+    }
+
     public void onStop(View view) {
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
     @Override

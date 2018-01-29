@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import java.util.List;
+
 import io.chengguo.track.library.R;
 
 /**
@@ -33,6 +35,8 @@ class Track extends View {
     private int mCurrentPosition = DEFAULT_POSITION;
     private int offsetTop = 50;
     private int mWidth;
+    public boolean isFull = false;
+    private List<Integer> mTrackData;
 
     public Track(Context context) {
         this(context, null);
@@ -66,9 +70,11 @@ class Track extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        Log.d(TAG, "onDraw: ");
         if (canDraw()) {
             drawBackground(canvas);
             drawGraduation(canvas);
+            drawTrack(canvas);
         }
     }
 
@@ -118,6 +124,14 @@ class Track extends View {
         }
     }
 
+    private void drawTrack(Canvas canvas) {
+        int cy = canvas.getHeight() / 2 + offsetTop;
+        int size = mTrackData == null ? 0 : mTrackData.size();
+        for (int i = 0; i < size; i++) {
+            // TODO: 2018/1/29
+        }
+    }
+
     /**
      * 是否是大刻度
      *
@@ -154,14 +168,32 @@ class Track extends View {
         return 0;
     }
 
-    public void notifyPositionChanged(int position) {
+    /**
+     * 通知Adapter位置发生变化，绘制视图
+     *
+     * @param position
+     * @param trackData
+     */
+    public void notifyPositionChanged(int position, List<Integer> trackData) {
         if (position <= DEFAULT_POSITION) {
             Log.e(TAG, "parameter position must greater than " + DEFAULT_POSITION);
             return;
         }
         if (mCurrentPosition != position) {
             mCurrentPosition = position;
+            mTrackData = trackData;
             postInvalidate();
         }
+    }
+
+    /**
+     * 通知Track数据发生变化，绘制视图
+     *
+     * @param trackData
+     */
+    public void notifyDataChanged(List<Integer> trackData) {
+        mTrackData = trackData;
+        Log.d(TAG, "notifyDataChanged() called with: trackData = [" + trackData + "]");
+        postInvalidate();
     }
 }
