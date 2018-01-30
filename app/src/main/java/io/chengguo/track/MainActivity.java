@@ -38,7 +38,9 @@ public class MainActivity extends AppCompatActivity implements SlideGraduationLi
     }
 
     public void onStart(View view) {
-        track.addTrack((int) (Math.random() * 100));
+        for (int i = 0; i < 10; i++) {
+            track.addTrack((int) (Math.random() * 100));
+        }
 //        timer = new Timer();
 //        timer.scheduleAtFixedRate(new TimerTask() {
 //            @Override

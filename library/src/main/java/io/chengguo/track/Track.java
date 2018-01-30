@@ -20,12 +20,14 @@ class Track extends View {
     private static final String TAG = "Track";
     //默认索引
     private static final int DEFAULT_POSITION = -1;
-    //每小格的距离
+    //每小格刻度的间距
     private int mGraduationSpace;
-    //每4小格是一大格
-    private static final int UNIT_GRADUATION_INTERVAL = 4;
-    private static final int UNIT_TRACK = 6;
-    private Paint mPaint;
+    //Track间距
+    private int mTrackSpace;
+    //刻度画笔
+    private Paint mGraduationPaint;
+    //Track画笔
+    private Paint mTrackPaint;
     private int mBackground;
     //小刻度颜色
     private int mGraduationSColor;
@@ -33,9 +35,9 @@ class Track extends View {
     private int mGraduationLColor;
     //在RecyclerView中的索引
     private int mCurrentPosition = DEFAULT_POSITION;
-    private int offsetTop = 50;
-    private int mWidth;
-    public boolean isFull = false;
+    //TrackTime高度
+    private int mOffsetTop;
+    //刻度数据
     private List<Integer> mTrackData;
 
     public Track(Context context) {
@@ -49,23 +51,29 @@ class Track extends View {
     public Track(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttrs();
+        initPaint();
     }
 
     private void initAttrs() {
         setId(R.id.track_view);
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setStyle(Paint.Style.FILL);
         mBackground = getResources().getColor(R.color.TrackView_default_bg);
-        mGraduationSpace = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_graduation_space);
+        mGraduationSpace = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_track_space) * R.integer.TrackView_default_graduation_space_by_track_count;
         mGraduationSColor = getResources().getColor(R.color.TrackView_default_graduation_s);
         mGraduationLColor = getResources().getColor(R.color.TrackView_default_graduation_l);
+        mTrackSpace = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_track_space);
+        mOffsetTop = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_track_time_height);
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        mWidth = getMeasuredWidth();
+    private void initPaint() {
+        //刻度Paint
+        mGraduationPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mGraduationPaint.setStrokeCap(Paint.Cap.ROUND);
+        mGraduationPaint.setStyle(Paint.Style.FILL);
+        //TrackPaint
+        mTrackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTrackPaint.setStrokeCap(Paint.Cap.ROUND);
+        mTrackPaint.setStyle(Paint.Style.FILL);
+        mTrackPaint.setColor(getResources().getColor(R.color.TrackView_default_track));
     }
 
     @Override
@@ -94,8 +102,8 @@ class Track extends View {
      * @param canvas
      */
     private void drawBackground(Canvas canvas) {
-        mPaint.setColor(mBackground);
-        canvas.drawRect(0, offsetTop, getRight(), getBottom(), mPaint);
+        mGraduationPaint.setColor(mBackground);
+        canvas.drawRect(0, mOffsetTop, getRight(), getBottom(), mGraduationPaint);
     }
 
     /**
@@ -104,63 +112,90 @@ class Track extends View {
      * @param canvas
      */
     private void drawGraduation(Canvas canvas) {
-        int offsetLeft = getOffsetLeft();
+        int width = canvas.getWidth();
+        int offsetLeft = getGraduationOffsetLeft(width);
         //计算当前Track的总刻度数
-        int count = (mWidth - offsetLeft) / mGraduationSpace + 1;
+        int count = (width - offsetLeft) / mGraduationSpace + 1;
         Log.d(TAG, "count: " + count);
 
         for (int i = 0, x, y; i < count; i++) {
             x = offsetLeft + i * mGraduationSpace;
-            if (isLargeGraduation(i, offsetLeft)) {
+            if (isLargeGraduation(width, i, offsetLeft)) {
                 //大刻度
-                mPaint.setColor(mGraduationLColor);
-                y = offsetTop + 40;
+                mGraduationPaint.setColor(mGraduationLColor);
+                y = mOffsetTop + 40;
             } else {
                 //小刻度
-                mPaint.setColor(mGraduationSColor);
-                y = offsetTop + 30;
+                mGraduationPaint.setColor(mGraduationSColor);
+                y = mOffsetTop + 30;
             }
-            canvas.drawLine(x, offsetTop, x, y, mPaint);
+            canvas.drawLine(x, mOffsetTop, x, y, mGraduationPaint);
         }
     }
 
+    /**
+     * 绘制Track
+     *
+     * @param canvas
+     */
     private void drawTrack(Canvas canvas) {
-        int cy = canvas.getHeight() / 2 + offsetTop;
+        int width = canvas.getWidth();
         int size = mTrackData == null ? 0 : mTrackData.size();
+        if (size <= 0)
+            return;
+        int offsetLeft = getTrackOffsetLeft(width);
+        int cy = canvas.getHeight() / 2 + mOffsetTop;
         for (int i = 0; i < size; i++) {
-            // TODO: 2018/1/29
+            int x = offsetLeft + mTrackSpace * i;
+            canvas.drawLine(x, cy - mTrackData.get(i), x, cy + mTrackData.get(i), mTrackPaint);
         }
+    }
+
+    /**
+     * 获取Track的偏移量
+     *
+     * @param width
+     * @return
+     */
+    private int getTrackOffsetLeft(int width) {
+        int preOL = (mCurrentPosition - 1) * width % mTrackSpace;
+        if (preOL > 0) {
+            return mTrackSpace - preOL;
+        }
+        return 0;
     }
 
     /**
      * 是否是大刻度
      *
+     * @param width
      * @param i
      * @param offsetLeft
      * @return
      */
-    private boolean isLargeGraduation(int i, int offsetLeft) {
+    private boolean isLargeGraduation(int width, int i, int offsetLeft) {
         //第一个Track的索引为-1；第二个Track的索引从0依次递增
         int index = mCurrentPosition - 1;
         //到当前的刻度数量
-        int graduationCount = mWidth * index / mGraduationSpace + i;
+        int graduationCount = width * index / mGraduationSpace + i;
         //处理拼接刻度导致的索引偏移
         graduationCount += (offsetLeft > 0 ? index < 0 ? 0 : 1 : 0);
-        return graduationCount % UNIT_GRADUATION_INTERVAL == 0;
+        return graduationCount % R.integer.TrackView_default_graduation_large_space_by_graduation_count == 0;
     }
 
     /**
-     * 获取左侧偏移值
+     * 获取刻度的左侧偏移值
      *
+     * @param width
      * @return
      */
-    private int getOffsetLeft() {
+    private int getGraduationOffsetLeft(int width) {
         //第一个，offset值为取余
         if (mCurrentPosition == 0) {
-            return mWidth % mGraduationSpace;
+            return width % mGraduationSpace;
         }
         //前一个Track剩余的偏移值
-        int prevOL = (mCurrentPosition - 1) * mWidth % mGraduationSpace;
+        int prevOL = (mCurrentPosition - 1) * width % mGraduationSpace;
         if (prevOL > 0) {
             //计算当前Track的偏移值
             return mGraduationSpace - prevOL;

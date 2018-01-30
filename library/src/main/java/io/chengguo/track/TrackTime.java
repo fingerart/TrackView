@@ -43,7 +43,7 @@ class TrackTime extends View implements ITrackNotify {
     }
 
     private void initAttrs() {
-        mLargeGraduationSpace = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_graduation_space) << 2;
+        mLargeGraduationSpace = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_track_space) * R.integer.TrackView_default_graduation_space_by_track_count << 2;
         int textSize = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_graduation_text);
         int textColor = getResources().getColor(R.color.TrackView_default_graduation_text);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -87,6 +87,7 @@ class TrackTime extends View implements ITrackNotify {
 
     /**
      * 获取监听RecyclerView.OnScrollListener的监听器，以更新时间
+     *
      * @return
      */
     public RecyclerView.OnScrollListener createRecyclerScrollListener() {

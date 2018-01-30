@@ -21,7 +21,7 @@ import static io.chengguo.track.Utils.createMPLayoutParams;
 public class TrackView extends ViewGroup {
     private static final String TAG = "TrackView";
 
-    private float offsetTop;
+    private float trackTimeHeight;
     private TrackRecyclerView trackRecycler;
 
     public TrackView(@NonNull Context context) {
@@ -39,7 +39,7 @@ public class TrackView extends ViewGroup {
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {
-        offsetTop = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_offset_top);
+        trackTimeHeight = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_track_time_height);
     }
 
     private void initView(Context context) {
@@ -51,7 +51,7 @@ public class TrackView extends ViewGroup {
         trackRecycler.addOnScrollListener(trackTime.createRecyclerScrollListener());
         //组合视图
         addView(trackRecycler, createMPLayoutParams());
-        addView(trackTime, LayoutParams.MATCH_PARENT, (int) offsetTop);
+        addView(trackTime, LayoutParams.MATCH_PARENT, (int) trackTimeHeight);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class TrackView extends ViewGroup {
         Paint cursorPaint = new Paint();
         cursorPaint.setColor(cursorColor);
         cursorPaint.setStrokeWidth(cursorWidth);
-        canvas.drawLine(getMeasuredWidth() / 2, offsetTop, getMeasuredWidth() / 2, getMeasuredHeight(), cursorPaint);
+        canvas.drawLine(getMeasuredWidth() / 2, trackTimeHeight, getMeasuredWidth() / 2, getMeasuredHeight(), cursorPaint);
     }
 
     public void addTrack(int grade) {

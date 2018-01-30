@@ -42,14 +42,13 @@ class TrackRecyclerView extends RecyclerView {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         Log.d(TAG, "onSizeChanged() called with: w = [" + w + "], h = [" + h + "], oldw = [" + oldw + "], oldh = [" + oldh + "]");
-        int graduationSpace = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_graduation_space);
-        // TODO: 2018/1/29 count 计算错了
-        int count = getWidth() / graduationSpace;
+        int count = getWidth() / 2 / 6;
         adapter.setItemCount(count);
     }
 
     public void howl(int grade) {
         adapter.addGrade(grade);
+        scrollBy(6, 0);
         ViewHolder vh = findViewHolderForLayoutPosition(layoutManager.findLastCompletelyVisibleItemPosition());
         if (vh != null && vh instanceof TrackHolder) {
             Track track = ((TrackHolder) vh).getTrackView();

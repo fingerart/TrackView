@@ -1,14 +1,15 @@
 package io.chengguo.track;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static io.chengguo.track.Utils.createMPLayoutParams;
@@ -38,6 +39,7 @@ class TrackAdapter extends RecyclerView.Adapter<TrackHolder> {
         if (trackView != null) {
             trackView.notifyPositionChanged(position, getTrackDataForPosition(position));
         }
+        holder.getAdapterPosition();
     }
 
     /**
@@ -60,7 +62,7 @@ class TrackAdapter extends RecyclerView.Adapter<TrackHolder> {
         if (d > 0) {
             toIndex -= d;
         }
-        return datas.subList(fromIndex, toIndex);
+        return new ArrayList<>(datas.subList(fromIndex, toIndex));
     }
 
     @Override
@@ -69,11 +71,12 @@ class TrackAdapter extends RecyclerView.Adapter<TrackHolder> {
     }
 
     /**
-     * 设置Item可绘制的个数
+     * 设置Item可绘制Track的个数
      *
      * @param itemCount
      */
     void setItemCount(int itemCount) {
+        Log.d(TAG, "setItemCount() called with: itemCount = [" + itemCount + "]");
         mItemCount = itemCount;
     }
 

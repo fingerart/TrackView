@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="TrackView_default_graduation_space">42px</dimen>
-    <dimen name="TrackView_default_graduation_text">12dp</dimen>
-    <dimen name="TrackView_default_offset_top">50px</dimen>//Track的top偏移量
-    <dimen name="TrackView_default_cursor">3px</dimen>//光标的宽度
+    <dimen name="TrackView_default_cursor">3px</dimen><!--光标的宽度-->
+    <dimen name="TrackView_default_track_space">6px</dimen><!--Track间距-->
+    <dimen name="TrackView_default_graduation_text">12dp</dimen><!--刻度字体大小-->
+    <dimen name="TrackView_default_track_time_height">50px</dimen><!--TrackTime高度-->
+    <integer name="TrackView_default_graduation_space_by_track_count">7</integer><!--小刻度间距 = Track间距 * {count}-->
+    <integer name="TrackView_default_graduation_large_space_by_graduation_count">4</integer><!--大刻度间距 = 小刻度间距 * {count}-->
 </resources>
