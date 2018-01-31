@@ -21,7 +21,8 @@
     <io.chengguo.track.TrackView
         android:id="@+id/track"
         android:layout_width="match_parent"
-        android:layout_height="150dp" />
+        android:layout_height="150dp"
+        app:graduation_text_size="15sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"

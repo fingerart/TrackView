@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="TrackView">
+        <attr name="background_color" format="color" />
         <attr name="track_color" format="color" />
-        <attr name="index_color" format="color" />
-        <attr name="graduation_l_color" format="color" />
+        <attr name="cursor_color" format="color" />
         <attr name="graduation_s_color" format="color" />
+        <attr name="graduation_l_color" format="color" />
         <attr name="graduation_text_color" format="color" />
         <attr name="graduation_text_size" format="dimension" />
     </declare-styleable>

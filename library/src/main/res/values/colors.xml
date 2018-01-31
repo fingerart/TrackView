@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="TrackView_default_bg">#F9F9F9</color>//默认背景色
-    <color name="TrackView_default_index">#F79898</color>
-    <color name="TrackView_default_track">#ADADAD</color>
-    <color name="TrackView_default_graduation_l">#D2D2D2</color>
-    <color name="TrackView_default_graduation_s">#E4E4E4</color>
-    <color name="TrackView_default_graduation_text">#808080</color>
+    <color name="TrackView_default_bg">#F9F9F9</color><!--默认背景色-->
+    <color name="TrackView_default_cursor">#F79898</color><!--光标-->
+    <color name="TrackView_default_track">#ADADAD</color><!--Track-->
+    <color name="TrackView_default_graduation_l">#D2D2D2</color><!--大刻度-->
+    <color name="TrackView_default_graduation_s">#E4E4E4</color><!--小刻度-->
+    <color name="TrackView_default_graduation_text">#808080</color><!--刻度文本-->
 </resources>

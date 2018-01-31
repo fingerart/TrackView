@@ -5,10 +5,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
+
+import java.util.List;
 
 import io.chengguo.track.library.R;
+
+import static io.chengguo.track.Utils.l;
 
 /**
  * Created by FingerArt on 2018/1/12.
@@ -16,24 +18,37 @@ import io.chengguo.track.library.R;
 class TrackRecyclerView extends RecyclerView {
     private static final String TAG = TrackRecyclerView.class.getSimpleName();
     private LinearLayoutManager layoutManager;
-    private TrackAdapter adapter;
+    private TrackRecyclerAdapter adapter;
+    //Track间距
+    private int trackSpace;
+    private TrackView mParent;
 
-    public TrackRecyclerView(Context context) {
-        this(context, null);
+    private TrackRecyclerView(Context context) {
+        this(context, (AttributeSet) null);
     }
 
-    public TrackRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    private TrackRecyclerView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public TrackRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
+    private TrackRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+    }
+
+    public TrackRecyclerView(Context context, TrackView trackView) {
+        this(context);
+        mParent = trackView;
+        initAttrs();
         initView(context);
+    }
+
+    private void initAttrs() {
+        trackSpace = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_track_space);
     }
 
     private void initView(Context context) {
         layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        adapter = new TrackAdapter();
+        adapter = new TrackRecyclerAdapter(mParent);
         setLayoutManager(layoutManager);
         setAdapter(adapter);
     }
@@ -41,19 +56,26 @@ class TrackRecyclerView extends RecyclerView {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        Log.d(TAG, "onSizeChanged() called with: w = [" + w + "], h = [" + h + "], oldw = [" + oldw + "], oldh = [" + oldh + "]");
-        int count = getWidth() / 2 / 6;
+        l(TAG, "onSizeChanged() called with: w = [%s], h = [%s]", w, h);
+        int count = (getWidth() >> 1) / trackSpace;
         adapter.setItemCount(count);
     }
 
+    /**
+     * 添加新的Track值
+     *
+     * @param grade
+     */
     public void howl(int grade) {
-        adapter.addGrade(grade);
-        scrollBy(6, 0);
+        adapter.addGradeAndNotify(grade);
+        scrollBy(trackSpace, 0);
         ViewHolder vh = findViewHolderForLayoutPosition(layoutManager.findLastCompletelyVisibleItemPosition());
         if (vh != null && vh instanceof TrackHolder) {
             Track track = ((TrackHolder) vh).getTrackView();
             if (track != null) {
-                track.notifyDataChanged(adapter.getTrackDataForPosition(vh.getPosition()));
+                int position = vh.getAdapterPosition();
+                List<Integer> data = adapter.getTrackDataForPosition(position);
+                track.notifyDataChanged(data);
             }
         }
     }
