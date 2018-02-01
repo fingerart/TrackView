@@ -8,8 +8,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.List;
 
 import io.chengguo.track.library.R;
 
@@ -54,6 +57,7 @@ public class TrackView extends ViewGroup {
     private ITrackAdapter mTrackAdapter;
     private TrackEngine mTrackEngine;
     private ITimeChangeListener mGraduationListener;
+    private boolean disableTouch = false;
 
     public TrackView(@NonNull Context context) {
         this(context, null);
@@ -176,6 +180,14 @@ public class TrackView extends ViewGroup {
         canvas.drawLine(widthHalf, mTrackTimeHeight, widthHalf, height, mCursorPaint);
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (disableTouch) {
+            return true;
+        }
+        return super.onInterceptTouchEvent(ev);
+    }
+
     private RecyclerView.OnScrollListener createRecyclerScrollListener() {
         return new RecyclerView.OnScrollListener() {
             @Override
@@ -253,6 +265,7 @@ public class TrackView extends ViewGroup {
      * 开始
      */
     public void start() {
+        disableTouch = true;
         if (mTrackEngine != null) {
             mTrackEngine.start();
         }
@@ -262,8 +275,22 @@ public class TrackView extends ViewGroup {
      * 停止
      */
     public void stop() {
+        disableTouch = false;
         if (mTrackEngine != null) {
             mTrackEngine.stop();
         }
+    }
+
+    /**
+     * 清理数据
+     */
+    public void clear() {
+        disableTouch = false;
+        stop();
+        mTrackRecycler.clear();
+    }
+
+    public void setTracks(List<Integer> tracks) {
+        mTrackRecycler.howl(tracks);
     }
 }

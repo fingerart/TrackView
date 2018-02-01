@@ -78,6 +78,7 @@ class Track extends View {
         mTrackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTrackPaint.setStrokeCap(Paint.Cap.ROUND);
         mTrackPaint.setStyle(Paint.Style.FILL);
+        mTrackPaint.setStrokeWidth(3);
         mTrackPaint.setColor(mParent.getTrackColor());
     }
 

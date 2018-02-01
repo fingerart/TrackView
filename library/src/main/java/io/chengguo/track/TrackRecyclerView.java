@@ -47,7 +47,7 @@ class TrackRecyclerView extends RecyclerView {
     }
 
     private void initView(Context context) {
-        layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        layoutManager = new TrackHorizontalLayoutManager(this);
         adapter = new TrackRecyclerAdapter(mParent);
         setLayoutManager(layoutManager);
         setAdapter(adapter);
@@ -61,16 +61,10 @@ class TrackRecyclerView extends RecyclerView {
         adapter.setItemCount(count);
     }
 
-    /**
-     * 添加新的Track值
-     *
-     * @param grade
-     */
-    public void howl(int grade) {
-        adapter.addGradeAndNotify(grade);
-        scrollBy(trackSpace, 0);
+    private void invalidateTrace() {
         ViewHolder vh = findViewHolderForLayoutPosition(layoutManager.findLastCompletelyVisibleItemPosition());
         if (vh != null && vh instanceof TrackHolder) {
+            scrollBy(trackSpace, 0);
             Track track = ((TrackHolder) vh).getTrackView();
             if (track != null) {
                 int position = vh.getAdapterPosition();
@@ -78,5 +72,24 @@ class TrackRecyclerView extends RecyclerView {
                 track.notifyDataChanged(data);
             }
         }
+    }
+
+    /**
+     * 添加新的Track值
+     *
+     * @param grade
+     */
+    void howl(int grade) {
+        adapter.addGradeAndNotify(grade);
+        invalidateTrace();
+    }
+
+    void howl(List<Integer> tracks) {
+        adapter.setGradeAndNotify(tracks);
+    }
+
+    void clear() {
+        adapter.setGradeAndNotify(null);
+        invalidateTrace();
     }
 }

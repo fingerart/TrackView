@@ -31,8 +31,12 @@ class TrackEngine {
         }
     }
 
+    public boolean isRunning() {
+        return mTimer != null;
+    }
+
     public synchronized void stop() {
-        if (mTimer != null) {
+        if (isRunning()) {
             mTimer.cancel();
             mTimer = null;
         }

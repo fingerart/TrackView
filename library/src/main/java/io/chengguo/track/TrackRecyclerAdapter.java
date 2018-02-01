@@ -17,7 +17,7 @@ import static io.chengguo.track.Utils.l;
 class TrackRecyclerAdapter extends RecyclerView.Adapter<TrackHolder> {
     private static final String TAG = TrackRecyclerAdapter.class.getSimpleName();
     private final TrackView root;
-    private List<Integer> datas = new ArrayList<>();
+    private List<Integer> datas;
     private int mItemCount;
 
     public TrackRecyclerAdapter(TrackView trackView) {
@@ -51,10 +51,13 @@ class TrackRecyclerAdapter extends RecyclerView.Adapter<TrackHolder> {
      */
     @Nullable
     List<Integer> getTrackDataForPosition(int position) {
+        if (datas == null) {
+            return null;
+        }
         int size = datas.size();
         int fromIndex = (position - 1) * mItemCount;
         int toIndex = position * mItemCount;
-        //过滤可能会引发一场的Index
+        //过滤可能会引发异常的Index
         if (fromIndex < 0 || fromIndex >= size || toIndex <= 0) {
             return null;
         }
@@ -87,7 +90,15 @@ class TrackRecyclerAdapter extends RecyclerView.Adapter<TrackHolder> {
      * @param grade
      */
     void addGradeAndNotify(int grade) {
+        if (datas == null) {
+            datas = new ArrayList<>();
+        }
         datas.add(grade);
+        notifyDataSetChanged();
+    }
+
+    void setGradeAndNotify(List<Integer> grades) {
+        datas = grades;
         notifyDataSetChanged();
     }
 }
