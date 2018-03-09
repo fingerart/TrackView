@@ -3,13 +3,12 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
-    publishNonDefault true
 
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
-        versionName "1.2.0-SNAPSHOT"
+        versionName "1.2.1"
     }
     buildTypes {
         release {
@@ -25,8 +24,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:support-annotations:27.0.2'
+    compile 'com.android.support:support-annotations:27.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
 }
 
-apply from: "maven-push.gradle"
+apply from: "bintrayUpload.gradle"

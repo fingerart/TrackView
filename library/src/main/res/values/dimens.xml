@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="TrackView_default_cursor">3px</dimen><!--光标的宽度-->
+    <dimen name="TrackView_default_track">3px</dimen><!--刻度的宽度-->
     <dimen name="TrackView_default_track_space">5px</dimen><!--Track间距-->
     <dimen name="TrackView_default_graduation_text">12dp</dimen><!--刻度字体大小-->
     <dimen name="TrackView_default_track_time_height">50px</dimen><!--TrackTime高度-->

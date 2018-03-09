@@ -7,7 +7,7 @@
     android:background="@android:color/white"
     android:orientation="vertical"
     android:scrollbars="horizontal"
-    tools:context="io.chengguo.track.MainActivity">
+    tools:context="io.chengguo.libs.MainActivity">
 
     <TextView
         android:id="@+id/time"
@@ -18,11 +18,10 @@
         android:text="00:00.00"
         android:textSize="20dp" />
 
-    <io.chengguo.track.TrackView
+    <io.chengguo.libs.track.TrackView
         android:id="@+id/track"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        app:graduation_text_size="15sp" />
+        android:layout_height="150dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -33,13 +32,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onStart"
+            android:onClick="onClickStart"
             android:text="start" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onStop"
+            android:onClick="onClickStop"
             android:text="pause" />
     </LinearLayout>
 </LinearLayout>

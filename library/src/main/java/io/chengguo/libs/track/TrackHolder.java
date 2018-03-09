@@ -1,9 +1,7 @@
-package io.chengguo.track;
+package io.chengguo.libs.track;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
-import io.chengguo.track.library.R;
 
 /**
  * Created by FingerArt on 2018/1/12.

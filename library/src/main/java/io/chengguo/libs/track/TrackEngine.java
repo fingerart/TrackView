@@ -1,9 +1,7 @@
-package io.chengguo.track;
+package io.chengguo.libs.track;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import io.chengguo.track.library.R;
 
 /**
  * 动力引擎

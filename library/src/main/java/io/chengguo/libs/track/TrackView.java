@@ -1,4 +1,4 @@
-package io.chengguo.track;
+package io.chengguo.libs.track;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,11 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
-
-import io.chengguo.track.library.R;
-
-import static io.chengguo.track.Utils.createMPLayoutParams;
-import static io.chengguo.track.Utils.l;
 
 /**
  * 音频轨迹
@@ -75,7 +70,7 @@ public class TrackView extends ViewGroup {
 
     private void initAttrs(Context context, AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TrackView);
-        int cursorWidth = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_cursor);
+        int cursorWidth = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_track);
         int cursorColor = ta.getColor(R.styleable.TrackView_cursor_color, context.getResources().getColor(R.color.TrackView_default_cursor));
         int backgroundColor = ta.getColor(R.styleable.TrackView_background_color, context.getResources().getColor(R.color.TrackView_default_bg));
         mTrackColor = ta.getColor(R.styleable.TrackView_track_color, context.getResources().getColor(R.color.TrackView_default_track));
@@ -92,6 +87,7 @@ public class TrackView extends ViewGroup {
         mBackgroundPaint.setColor(backgroundColor);
         //光标Paint
         mCursorPaint = new Paint();
+        mCursorPaint.setStyle(Paint.Style.FILL);
         mCursorPaint.setColor(cursorColor);
         mCursorPaint.setStrokeWidth(cursorWidth);
         mTrackEngine = new TrackEngine(this);
@@ -104,9 +100,9 @@ public class TrackView extends ViewGroup {
         TrackTime trackTime = new TrackTime(context, this);
         mTrackRecycler = new TrackRecyclerView(context, this);
         mTrackRecycler.addOnScrollListener(trackTime.createRecyclerScrollListener());
-        mTrackRecycler.addOnScrollListener(createRecyclerScrollListener());
+        mTrackRecycler.addOnScrollListener(this.createRecyclerScrollListener());
         //组合视图
-        addView(mTrackRecycler, createMPLayoutParams());
+        addView(mTrackRecycler, Utils.createMPLayoutParams());
         addView(trackTime, LayoutParams.MATCH_PARENT, (int) mTrackTimeHeight);
     }
 
@@ -152,8 +148,8 @@ public class TrackView extends ViewGroup {
     }
 
     @Override
-    public void onDrawForeground(Canvas canvas) {
-        super.onDrawForeground(canvas);
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
         drawCursor(canvas);
     }
 
@@ -163,7 +159,7 @@ public class TrackView extends ViewGroup {
      * @param canvas
      */
     private void drawBackground(Canvas canvas) {
-        l(TAG, "drawBackground() called");
+        Utils.l(TAG, "drawBackground() called");
         canvas.drawRect(0, mTrackTimeHeight, getRight(), getBottom(), mBackgroundPaint);
     }
 
@@ -173,7 +169,7 @@ public class TrackView extends ViewGroup {
      * @param canvas
      */
     private void drawCursor(Canvas canvas) {
-        l(TAG, "onDrawForeground: %s", canvas);
+        Utils.l(TAG, "onDrawForeground: %s", canvas);
         int widthHalf = canvas.getWidth() >> 1;
         int height = canvas.getHeight();
         //绘制中间光标
@@ -193,7 +189,7 @@ public class TrackView extends ViewGroup {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 int scrollOffset = recyclerView.computeHorizontalScrollOffset();
-                l(TAG, "computeHorizontalScrollOffset: %s", scrollOffset);
+                Utils.l(TAG, "computeHorizontalScrollOffset: %s", scrollOffset);
                 if (mGraduationListener != null) {
                     mGraduationListener.onTimeChanged(scrollOffset);
                 }
@@ -203,7 +199,7 @@ public class TrackView extends ViewGroup {
 
     @Override
     protected void onDetachedFromWindow() {
-        l(TAG, "onDetachedFromWindow() called");
+        Utils.l(TAG, "onDetachedFromWindow() called");
         super.onDetachedFromWindow();
         stop();
     }

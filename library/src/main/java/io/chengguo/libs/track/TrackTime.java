@@ -1,4 +1,4 @@
-package io.chengguo.track;
+package io.chengguo.libs.track;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,10 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
-
-import io.chengguo.track.library.R;
-
-import static io.chengguo.track.Utils.l;
 
 /**
  * 绘制Track对应刻度的时间
@@ -56,7 +52,7 @@ class TrackTime extends View {
     @Override
     @SuppressLint({"DefaultLocale", "DrawAllocation"})
     protected void onDraw(Canvas canvas) {
-        l(TAG, "onDraw() called");
+        Utils.l(TAG, "onDraw() called");
         int widthHalf = canvas.getWidth() >> 1;
         int height = canvas.getHeight();
         //之前的时间索引
@@ -92,7 +88,7 @@ class TrackTime extends View {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 scrollOffset = recyclerView.computeHorizontalScrollOffset();
-                l(TAG, "onScrolled() called with: computeHorizontalScrollOffset = [%s]", scrollOffset);
+                Utils.l(TAG, "onScrolled() called with: computeHorizontalScrollOffset = [%s]", scrollOffset);
                 invalidate();
             }
         };

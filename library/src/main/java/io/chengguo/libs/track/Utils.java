@@ -1,10 +1,8 @@
-package io.chengguo.track;
+package io.chengguo.libs.track;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.ViewGroup;
-
-import io.chengguo.track.library.BuildConfig;
 
 /**
  * 工具类

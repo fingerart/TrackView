@@ -1,4 +1,4 @@
-package io.chengguo.track.library;
+package io.chengguo.libs.track;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

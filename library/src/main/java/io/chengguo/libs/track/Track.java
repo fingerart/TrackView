@@ -1,19 +1,16 @@
-package io.chengguo.track;
+package io.chengguo.libs.track;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.List;
 
-import io.chengguo.track.library.R;
-
-import static io.chengguo.track.Utils.l;
-import static io.chengguo.track.Utils.le;
+import static io.chengguo.libs.track.Utils.l;
+import static io.chengguo.libs.track.Utils.le;
 
 /**
  * 音轨item
@@ -40,6 +37,7 @@ class Track extends View {
     private TrackView mParent;
     private int mGraduationLargeLength;
     private int mGraduationLength;
+    private int mTrackWidth;
 
     private Track(Context context) {
         this(context, (AttributeSet) null);
@@ -62,6 +60,7 @@ class Track extends View {
 
     private void initAttrs() {
         setId(R.id.track_view);
+        mTrackWidth = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_track);
         mGraduationSpace = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_track_space) * getResources().getInteger(R.integer.TrackView_default_graduation_space_by_track_count);
         mGraduationLargeSpaceByGraduationCount = getResources().getInteger(R.integer.TrackView_default_graduation_large_space_by_graduation_count);
         mGraduationLength = getResources().getDimensionPixelOffset(R.dimen.TrackView_default_graduation_length);
@@ -74,11 +73,12 @@ class Track extends View {
         mGraduationPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mGraduationPaint.setStrokeCap(Paint.Cap.ROUND);
         mGraduationPaint.setStyle(Paint.Style.FILL);
+        mGraduationPaint.setStrokeWidth(mTrackWidth);
         //TrackPaint
         mTrackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTrackPaint.setStrokeCap(Paint.Cap.ROUND);
         mTrackPaint.setStyle(Paint.Style.FILL);
-        mTrackPaint.setStrokeWidth(3);
+        mTrackPaint.setStrokeWidth(mTrackWidth);
         mTrackPaint.setColor(mParent.getTrackColor());
     }
 
@@ -133,12 +133,11 @@ class Track extends View {
      * @param canvas
      */
     private void drawTrack(Canvas canvas) {
-        int width = canvas.getWidth();
         int trackCount = mTrackData == null ? 0 : mTrackData.size();
         l(TAG, "drawTrack() called with: trackCount = [%s]", trackCount);
         if (trackCount <= 0)
             return;
-        int offsetLeft = getTrackOffsetLeft(width);
+        int offsetLeft = getTrackOffsetLeft(canvas.getWidth());
         int cy = canvas.getHeight() / 2 + (int) (mParent.getTrackTimeHeight());
         for (int i = 0; i < trackCount; i++) {
             int x = offsetLeft + mTrackSpace * i;
@@ -158,6 +157,15 @@ class Track extends View {
             return mTrackSpace - preOL;
         }
         return 0;
+    }
+
+    /**
+     * 获取下一个Track的偏移量
+     *
+     * @return
+     */
+    boolean needAddOne() {
+        return mCurrentPosition * getMeasuredWidth() % mTrackSpace == 0;
     }
 
     /**
@@ -222,7 +230,7 @@ class Track extends View {
      * @param trackData
      */
     public void notifyDataChanged(List<Integer> trackData) {
-        l(TAG, "notifyDataChanged() called with: trackData = [%s]", trackData);
+        l(TAG, "notifyDataChanged() called with: count = %s, trackData = [%s]", trackData == null ? 0 : trackData.size(), trackData);
         mTrackData = trackData;
         invalidate();
     }
