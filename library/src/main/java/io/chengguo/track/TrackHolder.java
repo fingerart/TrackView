@@ -1,4 +1,4 @@
-package io.chengguo.libs.track;
+package io.chengguo.track;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

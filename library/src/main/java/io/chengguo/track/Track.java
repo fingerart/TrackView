@@ -1,4 +1,4 @@
-package io.chengguo.libs.track;
+package io.chengguo.track;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,8 +9,8 @@ import android.view.View;
 
 import java.util.List;
 
-import static io.chengguo.libs.track.Utils.l;
-import static io.chengguo.libs.track.Utils.le;
+import static io.chengguo.track.Utils.l;
+import static io.chengguo.track.Utils.le;
 
 /**
  * 音轨item

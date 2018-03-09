@@ -1,4 +1,4 @@
-package io.chengguo.libs.track;
+package io.chengguo.track;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.chengguo.libs.track.Utils.createMPLayoutParams;
+import static io.chengguo.track.Utils.createMPLayoutParams;
 
 /**
  * Created by FingerArt on 2018/1/12.

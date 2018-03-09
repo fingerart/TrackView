@@ -7,7 +7,7 @@
     android:background="@android:color/white"
     android:orientation="vertical"
     android:scrollbars="horizontal"
-    tools:context="io.chengguo.libs.MainActivity">
+    tools:context="io.chengguo.libs.io.chengguo.track.MainActivity">
 
     <TextView
         android:id="@+id/time"
@@ -18,7 +18,7 @@
         android:text="00:00.00"
         android:textSize="20dp" />
 
-    <io.chengguo.libs.track.TrackView
+    <io.chengguo.track.TrackView
         android:id="@+id/track"
         android:layout_width="match_parent"
         android:layout_height="150dp" />

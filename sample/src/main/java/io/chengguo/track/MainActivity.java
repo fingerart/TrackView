@@ -1,4 +1,4 @@
-package io.chengguo.libs;
+package io.chengguo.track;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -6,10 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
-import io.chengguo.libs.track.ITimeChangeListener;
-import io.chengguo.libs.track.ITrackAdapter;
-import io.chengguo.libs.track.TrackView;
 
 public class MainActivity extends AppCompatActivity implements ITrackAdapter, ITimeChangeListener {
 

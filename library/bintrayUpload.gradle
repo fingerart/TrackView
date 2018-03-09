@@ -1,48 +1,26 @@
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-// load properties
 Properties properties = new Properties()
-File localPropertiesFile = project.file("local.properties");
-if(localPropertiesFile.exists()){
-    properties.load(localPropertiesFile.newDataInputStream())
-}
-File projectPropertiesFile = project.file("project.properties");
-if(projectPropertiesFile.exists()){
-    properties.load(projectPropertiesFile.newDataInputStream())
-}
+properties.load(project.rootProject.file("local.properties").newDataInputStream())
+def bintrayUser = properties.getProperty("BINTRAY_USER")
+def bintrayApikey = properties.getProperty("BINTRAY_API_KEY")
+def versionName = android.defaultConfig.versionName
 
-// read properties
-def projectName = properties.getProperty("project.name")
-def projectGroupId = properties.getProperty("project.groupId")
-def projectArtifactId = properties.getProperty("project.artifactId")
-def projectVersionName = android.defaultConfig.versionName
-def projectPackaging = properties.getProperty("project.packaging")
-def projectSiteUrl = properties.getProperty("project.siteUrl")
-def projectGitUrl = properties.getProperty("project.gitUrl")
-
-def developerId = properties.getProperty("developer.id")
-def developerName = properties.getProperty("developer.name")
-def developerEmail = properties.getProperty("developer.email")
-
-def bintrayUser = properties.getProperty("bintray.user")
-def bintrayApikey = properties.getProperty("bintray.apikey")
-
-def javadocName = properties.getProperty("javadoc.name")
-
-group = projectGroupId
+group = PROJECT_GROUP_ID
+project.archivesBaseName = PROJECT_ARTIFACT_ID
 
 // This generates POM.xml with proper parameters
 install {
     repositories.mavenInstaller {
         pom {
             project {
-                name projectName
-                groupId projectGroupId
-                artifactId projectArtifactId
-                version projectVersionName
-                packaging projectPackaging
-                url projectSiteUrl
+                name PROJECT_NAME
+                groupId PROJECT_GROUP_ID
+                artifactId PROJECT_ARTIFACT_ID
+                version versionName
+                packaging PROJECT_PACKAGING
+                url PROJECT_SITE_URL
                 licenses {
                     license {
                         name 'The Apache Software License, Version 2.0'
@@ -51,15 +29,15 @@ install {
                 }
                 developers {
                     developer {
-                        id developerId
-                        name developerName
-                        email developerEmail
+                        id DEVELOPER_ID
+                        name DEVELOPER_NAME
+                        email DEVELOPERE_MAIL
                     }
                 }
                 scm {
-                    connection projectGitUrl
-                    developerConnection projectGitUrl
-                    url projectSiteUrl
+                    connection PROJECT_GIT_URL
+                    developerConnection PROJECT_GIT_URL
+                    url PROJECT_SITE_URL
                 }
             }
         }
@@ -101,9 +79,9 @@ javadoc {
         encoding "UTF-8"
         charSet 'UTF-8'
         author true
-        version projectVersionName
+        version versionName
         links "http://docs.oracle.com/javase/7/docs/api"
-        title javadocName
+        title PROJECT_NAME
     }
 }
 
@@ -114,10 +92,13 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = projectName
-        websiteUrl = projectSiteUrl
-        vcsUrl = projectGitUrl
+        name = PROJECT_NAME
+        desc = PROJECT_DESCRIPTION
+        websiteUrl = PROJECT_SITE_URL
+        issueTrackerUrl = PROJECT_ISSUE_TRACKER_URL
+        vcsUrl = PROJECT_GIT_URL
         licenses = ["Apache-2.0"]
+        publicDownloadNumbers = true
         publish = true
     }
 }
