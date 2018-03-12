@@ -7,6 +7,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import io.chengguo.libs.track.ITimeChangeListener;
+import io.chengguo.libs.track.ITrackAdapter;
+import io.chengguo.libs.track.TrackView;
+
 public class MainActivity extends AppCompatActivity implements ITrackAdapter, ITimeChangeListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -19,8 +23,18 @@ public class MainActivity extends AppCompatActivity implements ITrackAdapter, IT
         setContentView(R.layout.activity_main);
         time = findViewById(R.id.time);
         track = findViewById(R.id.track);
-        track.setTrackAdapter(this);//ITrackAdapter
-        track.setGraduationListener(this);//ITimeChangeListener
+        track.setTrackAdapter(new ITrackAdapter() {
+            @Override
+            public int getAmplitude() {
+                return 0;
+            }
+        });//ITrackAdapter
+        track.setGraduationListener(new ITimeChangeListener() {
+            @Override
+            public void onTimeChanged(int millisecond) {
+
+            }
+        });//ITimeChangeListener
     }
 
     @Override

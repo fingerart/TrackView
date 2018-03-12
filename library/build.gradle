@@ -1,11 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 26
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 27
+        targetSdkVersion 26
         versionCode 1
         versionName "1.2.1"
     }
@@ -24,7 +24,7 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:support-annotations:27.1.0'
-    implementation 'com.android.support:recyclerview-v7:27.1.0'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
 }
 
 apply from: "bintrayUpload.gradle"
