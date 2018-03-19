@@ -2,7 +2,7 @@
 
 [ ![Download](https://api.bintray.com/packages/fingerart/maven/TrackView/images/download.svg) ](https://bintray.com/fingerart/maven/TrackView/_latestVersion)
 
-An efficient Android audio volume display library
+An efficient android Audio display Library
 
 ## Preview
 
