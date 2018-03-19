@@ -6,7 +6,7 @@ An efficient Android audio volume display library
 
 ## Preview
 
-
+![trackview](./art/trackview.gif)
 
 ## How to use
 
@@ -42,10 +42,10 @@ Call
 ```java
 class Activity {
     TrackView track;
-    
+
     void onCreate() {
         track = findViewById(R.id.track);
-        
+
         //Set track adapter
         track.setTrackAdapter(new ITrackAdapter() {
                     @Override
@@ -62,15 +62,15 @@ class Activity {
                     }
                 });
     }
-    
+
     void onClickStart(View view) {
         track.start();
     }
-    
+
     void onClickStop(View view) {
         track.stop();
     }
-    
+
     void onDestroy() {
         track.stop();
     }
